@@ -1,0 +1,136 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetalCisneros - Detalle de Producto</title>
+    <link rel="stylesheet" href="{% static 'styles/producto-detalle.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/header.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/footer.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="{% url 'index' %}" class="logo">Metal<span>Cisneros</span></a>
+
+            <div class="menu-toggle" id="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div class="nav-links">
+                <a href="{% url 'index' %}">Inicio</a>
+                <a href="{% url 'catalogo' %}">Catálogo</a>
+                <a href="{% url 'carrito' %}">Carrito</a>
+                
+            </div>
+            <div class="nav-icons">
+                <a href="#" id="search-toggle"><i class="fas fa-search"></i></a>
+                <a href="{% url 'administracion' %}"><i class="fas fa-user"></i></a>
+                <a href="{% url 'carrito' %}"><i class="fas fa-shopping-bag"></i></a>
+            </div>
+            <div class="search-overlay" id="search-overlay">
+                <div class="search-container">
+                    <div class="search-box">
+                        <input type="text" id="search-input" placeholder="Buscar productos..." autocomplete="off">
+                        <button id="search-button"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="search-suggestions" id="search-suggestions"></div>
+                </div>
+                <button class="close-search" id="close-search"><i class="fas fa-times"></i></button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="producto-detalle" id="producto-detalle">
+            <!-- Contenido se cargará dinámicamente con JavaScript -->
+        </div>
+    </main>
+
+    <section class="comentarios-section">
+        <h2>Comentarios</h2>
+        <div id="comentarios-container">
+            <!-- Comentarios se cargarán aquí -->
+        </div>
+        <button id="abrir-modal-comentario" class="btn-comentar">Añadir Comentario</button>
+    </section>
+
+    <!-- Modal para comentarios -->
+    <div id="modal-comentario" class="modal" style="display: none;">
+        <div class="modal-contenido">
+            <span class="cerrar-modal">&times;</span>
+            <h3>Deja tu comentario</h3>
+            <form id="form-comentario">
+                <input type="hidden" id="producto-id" value="{{ producto.id }}">
+                <div class="form-group">
+                    <label for="nombre-comentario">Nombre</label>
+                    <input type="text" id="nombre-comentario" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefono-comentario">Teléfono</label>
+                    <input type="tel" id="telefono-comentario" required>
+                </div>
+                <div class="form-group">
+                    <label for="texto-comentario">Comentario</label>
+                    <textarea id="texto-comentario" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-enviar">Enviar Comentario</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>MetalCisneros</h3>
+                <p>Especialistas en cerrajería y carpintería metálica de alta calidad para su hogar o negocio.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Enlaces</h3>
+                <ul>
+                    <li><a href="{% url 'index' %}">Inicio</a></li>
+                    <li><a href="{% url 'catalogo' %}">Catálogo</a></li>
+                    <li><a href="{% url 'carrito' %}">Carrito</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Ayuda</h3>
+                <ul>
+                    <li><a href="#">Preguntas Frecuentes</a></li>
+                    <li><a href="#">Envíos y Devoluciones</a></li>
+                    <li><a href="#">Guía de Tallas</a></li>
+                    <li><a href="#">Política de Privacidad</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contacto</h3>
+                <ul>
+                    <li>Teléfono: +51 922 684 873</li>
+                    <li>Email: astro.hellowworld@gmail.com</li>
+                    <li>Dirección: Calle 123, Ica, Perú</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="{% static 'scripts/producto-detalle.js' %}"></script>
+    <script src="{% static 'scripts/producto-detalle-comentarios.js' %}"></script>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetalCisneros - Panel de Administración</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'styles/administracion.css' %}">
+    <style>
+        
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo-admin">
+                <h2>Metal<span>Cisneros</span></h2>
+                <p>Panel de Administración</p>
+            </div>
+
+            <div class="nav-menu">
+                <div class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-section="clientes">
+                    <i class="fas fa-users"></i>
+                    <span>Clientes</span>
+                </div>
+                <div class="nav-item" data-section="pedidos">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>Pedidos</span>
+                </div>
+                <div class="nav-item" data-section="productos">
+                    <i class="fas fa-box-open"></i>
+                    <span>Productos</span>
+                </div>
+                <div class="nav-item" data-section="comentarios">
+                    <i class="fas fa-comments"></i>
+                    <span>Comentarios</span>
+                </div>
+                <div class="nav-item" data-section="estadisticas">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Estadísticas</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header-admin">
+                <h1 id="section-title">Dashboard</h1>
+                
+            </div>
+
+            <!-- Sección Dinámica -->
+            <div id="content-section">
+                <!-- El contenido se cargará dinámicamente aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para detalles -->
+    <div id="detail-modal" class="modal">
+        <div class="modal-contenido">
+            <span class="cerrar-modal">&times;</span>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="{% static 'scripts/administracion.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>

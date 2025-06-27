@@ -1,0 +1,395 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerrajería - carpintería - metálica cisneros</title>
+    <link rel="stylesheet" href="{% static 'styles/header.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/catalogo.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/footer.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<style>
+    .contenido-productos {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        padding: 1rem;
+    }
+
+    .producto img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    
+    .producto {
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .producto:hover {
+        transform: translateY(-5px);
+    }
+    
+    .producto-info {
+        padding: 15px;
+    }
+
+    
+</style>
+
+<body class="con-sidebar">
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="{% url 'index' %}" class="logo">Metal<span>Cisneros</span></a>
+
+            <div class="menu-toggle" id="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div class="nav-links">
+                <a href="{% url 'index' %}">Inicio</a>
+                <a href="{% url 'catalogo' %}">Catálogo</a>
+                <a href="{% url 'carrito' %}">Carrito</a>
+                
+            </div>
+            <div class="nav-icons">
+                <a href="#" id="search-toggle"><i class="fas fa-search"></i></a>
+                <a href="{% url 'administracion' %}"><i class="fas fa-user"></i></a>
+                <a href="{% url 'carrito' %}"><i class="fas fa-shopping-bag"></i></a>
+            </div>
+            <div class="search-overlay" id="search-overlay">
+                <div class="search-container">
+                    <div class="search-box">
+                        <input type="text" id="search-input" placeholder="Buscar productos..." autocomplete="off">
+                        <button id="search-button"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="search-suggestions" id="search-suggestions"></div>
+                </div>
+                <button class="close-search" id="close-search"><i class="fas fa-times"></i></button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Filtros móviles modernos -->
+    <div class="filtros-moviles-container">
+        <form method="get" action="{% url 'catalogo' %}">
+        <div class="filtro-movil">
+            <select name="tipo" onchange="this.form.submit()">
+                <option value="Todos" {% if tipo_seleccionado == 'Todos' %}selected{% endif %}>Todos los tipos</option>
+                {% for categoria in categorias %}
+                <option value="{{ categoria.nombre }}" {% if tipo_seleccionado == categoria.nombre %}selected{% endif %}>
+                    {{ categoria.nombre }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filtro-movil">
+            <select name="material" onchange="this.form.submit()">
+                <option value="Todos" {% if material_seleccionado == 'Todos' %}selected{% endif %}>Todos los materiales</option>
+                {% for material in materiales %}
+                <option value="{{ material.nombre }}" {% if material_seleccionado == material.nombre %}selected{% endif %}>
+                    {{ material.nombre }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filtro-movil">
+            <select name="orden" onchange="this.form.submit()">
+                <option value="ninguno" {% if orden_seleccionado == 'ninguno' %}selected{% endif %}>Ordenar por precio</option>
+                <option value="asc" {% if orden_seleccionado == 'asc' %}selected{% endif %}>Menor a mayor</option>
+                <option value="desc" {% if orden_seleccionado == 'desc' %}selected{% endif %}>Mayor a menor</option>
+            </select>
+        </div>
+
+            <!-- Mantener otros filtros activos -->
+            {% if material_seleccionado != 'Todos' %}
+            <input type="hidden" name="material" value="{{ material_seleccionado }}">
+            {% endif %}
+            {% if orden_seleccionado != 'ninguno' %}
+            <input type="hidden" name="orden" value="{{ orden_seleccionado }}">
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="catalogo-container">
+        <aside class="sidebar">
+            <form method="get" action="{% url 'catalogo' %}">
+                <!-- Mantener todos los filtros activos -->
+                {% if tipo_seleccionado != 'Todos' %}
+                <input type="hidden" name="tipo" value="{{ tipo_seleccionado }}">
+                {% endif %}
+                {% if material_seleccionado != 'Todos' %}
+                <input type="hidden" name="material" value="{{ material_seleccionado }}">
+                {% endif %}
+                {% if orden_seleccionado != 'ninguno' %}
+                <input type="hidden" name="orden" value="{{ orden_seleccionado }}">
+                {% endif %}
+
+                <div class="filtro filtro-tipo">
+                    <h3><i class="fa-solid fa-layer-group"></i> Categoría</h3>
+                    <ul>
+                        <li>
+                            <button type="submit" name="tipo" value="Todos" class="{% if tipo_seleccionado == 'Todos' %} filtro-activo {% endif %}">
+                                <i class="fas fa-star"></i> Todos
+                            </button>
+                        </li>
+                        {% for categoria in categorias %}
+                        <li>
+                            <button type="submit" name="tipo" value="{{ categoria.nombre }}" 
+                                class="{% if tipo_seleccionado == categoria.nombre %}filtro-activo{% endif %}">
+                                <i class="fas fa-{{ categoria.icono }}"></i> {{ categoria.nombre }}
+                            </button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Filtro por material -->
+                <div class="filtro filtro-genero">
+                    <h3><i class="fas fa-hammer"></i> Material</h3>
+                    <ul>
+                        <li>
+                            <button type="submit" name="material" value="Todos" 
+                                class="{% if material_seleccionado == 'Todos' %}filtro-activo{% endif %}">
+                                <i class="fas fa-star"></i> Todos
+                            </button>
+                        </li>
+                        {% for material in materiales %}
+                        <li>
+                            <button type="submit" name="material" value="{{ material.nombre }}" 
+                                class="{% if material_seleccionado == material.nombre %}filtro-activo{% endif %}">
+                                <i class="fas fa-cube"></i> {{ material.nombre }}
+                            </button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Filtro por precio -->
+                <div class="filtro filtro-precio">
+                    <h3><i class="fas fa-sort-amount-down"></i> Ordenar por precio</h3>
+                    <ul>
+                            <li>
+                                <button type="submit" name="orden" value="ninguno" 
+                                    class="{% if orden_seleccionado == 'ninguno' %}filtro-activo{% endif %}">
+                                    <i class="fas fa-bars"></i> Ninguno
+                                </button>
+                            </li>
+                            <li>
+                                <button type="submit" name="orden" value="asc" 
+                                    class="{% if orden_seleccionado == 'asc' %}filtro-activo{% endif %}">
+                                    <i class="fas fa-sort-amount-down-alt"></i> Menor a mayor
+                                </button>
+                            </li>
+                            <li>
+                                <button type="submit" name="orden" value="desc" 
+                                    class="{% if orden_seleccionado == 'desc' %}filtro-activo{% endif %}">
+                                    <i class="fas fa-sort-amount-down"></i> Mayor a menor
+                                </button>
+                            </li>
+                        </ul>
+                </div>
+            
+            </form>
+        </aside>
+
+        <main id="contenedor-productos" class="contenido-productos">
+            {% for producto in productos %}
+            
+            <div class="producto" style="cursor: pointer;" data-url="{% url 'producto_detalle' producto.id %}">
+                <img src="{{ producto.imagen }}" alt="{{ producto.nombre }}">
+                <div class="producto-info">
+                    <h3>{{ producto.nombre }}</h3>
+                    <p>{{ producto.descripcion|truncatechars:100 }}</p>
+                    <div class="producto-detalles">
+                        <span><i class="fas fa-ruler-combined"></i> {{ producto.dimensiones }}</span>
+                        <span><i class="fas fa-paint-roller"></i> {{ producto.color.nombre }}</span>
+                    </div>
+                    <div class="producto-precio">
+                        <span class="precio">S/. {{ producto.precio }}</span>
+                        
+                        <button class="btn-carrito" data-id="{{ producto.id }}" 
+                                onclick="addToCartFromTemplate('{{ producto.id|escapejs }}', '{{ producto.nombre|escapejs }}', {{ producto.precio }}, '{{ producto.imagen|escapejs }}')">
+                            <i class="fas fa-shopping-cart"></i> Añadir
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="no-productos">No hay productos disponibles con los filtros seleccionados.</p>
+            {% endfor %}
+        </main>
+    </div>
+
+    <!-- Botón para mostrar/ocultar filtros en móviles -->
+    <div class="toggle-sidebar">
+        <i class="fas fa-filter"></i>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>MetalCisneros</h3>
+                <p>Especialistas en cerrajería y carpintería metálica de alta calidad para su hogar o negocio.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Enlaces</h3>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="catalogo.html">Catálogo</a></li>
+                    <li><a href="carrito.html">Carrito</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Ayuda</h3>
+                <ul>
+                    <li><a href="#">Preguntas Frecuentes</a></li>
+                    <li><a href="#">Envíos y Devoluciones</a></li>
+                    <li><a href="#">Guía de Tallas</a></li>
+                    <li><a href="#">Política de Privacidad</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contacto</h3>
+                <ul>
+                    <li>Teléfono: +51 922 684 873</li>
+                    <li>Email: astro.hellowworld@gmail.com</li>
+                    <li>Dirección: Calle 123, Ica, Perú</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Función puente para convertir los datos del template a objeto producto
+        function addToCartFromTemplate(id, nombre, precio, imagen) {
+            const producto = {
+                id: parseInt(id),
+                nombre: nombre,
+                precio: precio,
+                imagen: imagen
+            };
+            addToCart(producto);
+        }
+
+        // Función para añadir al carrito
+        function addToCart(producto) {
+            try {
+                // Obtener el carrito actual del localStorage
+                let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+                
+                // Verificar si el producto ya está en el carrito
+                const productoExistente = carrito.find(item => item.id === producto.id);
+                
+                if (productoExistente) {
+                    // Si ya existe, aumentar la cantidad en 1
+                    productoExistente.cantidad += 1;
+                } else {
+                    // Si no existe, añadirlo al carrito con cantidad 1
+                    carrito.push({
+                        id: producto.id,
+                        nombre: producto.nombre,
+                        precio: producto.precio,
+                        imagen: producto.imagen,
+                        cantidad: 1
+                    });
+                }
+                
+                // Guardar el carrito actualizado en localStorage
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                
+                // Actualizar el contador del carrito
+                actualizarContadorCarrito();
+                
+                // Mostrar notificación
+                mostrarNotificacion('Producto añadido al carrito');
+                
+                // Detener la propagación del evento para evitar redirección
+                event.stopPropagation();
+            } catch (error) {
+                console.error('Error al añadir al carrito:', error);
+                mostrarNotificacion('Error al añadir el producto');
+            }
+        }
+
+        // Función para actualizar el contador del carrito
+        function actualizarContadorCarrito() {
+            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            const totalItems = carrito.reduce((total, item) => total + item.cantidad, 0);
+            
+            // Actualizar todos los contadores del carrito en la página
+            const contadores = document.querySelectorAll('.cart-count');
+            contadores.forEach(contador => {
+                contador.textContent = totalItems;
+                contador.style.display = totalItems > 0 ? 'flex' : 'none';
+            });
+        }
+
+        // Función para mostrar notificación
+        function mostrarNotificacion(mensaje) {
+            const notificacion = document.createElement('div');
+            notificacion.className = 'notificacion';
+            notificacion.textContent = mensaje;
+            document.body.appendChild(notificacion);
+            
+            // Animar la notificación
+            setTimeout(() => {
+                notificacion.classList.add('mostrar');
+            }, 100);
+            
+            // Eliminar la notificación después de 3 segundos
+            setTimeout(() => {
+                notificacion.classList.remove('mostrar');
+                setTimeout(() => {
+                    notificacion.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Actualizar contador al cargar la página
+        document.addEventListener('DOMContentLoaded', actualizarContadorCarrito);
+    </script>
+
+
+
+    
+    <script src="{% static 'scripts/search.js' %}" defer></script>
+    <script src="{% static 'scripts/header-responsive.js' %}" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.producto').forEach(producto => {
+                producto.addEventListener('click', function(e) {
+                    // Evitar que se active cuando se hace clic en el botón "Añadir"
+                    if (!e.target.closest('.btn-carrito')) {
+                        const url = this.getAttribute('data-url');
+                        window.location.href = url;
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
