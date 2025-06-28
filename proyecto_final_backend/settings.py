@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'proyecto_final_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bbdd-II-proyecto-final',  # Se queda con museos nuv
+        'NAME': 'bbdd-II-proyecto-final', 
         'USER': 'postgres',
         'PASSWORD': '1234',
         'HOST': 'localhost',
