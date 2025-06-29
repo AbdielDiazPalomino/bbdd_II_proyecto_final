@@ -224,7 +224,7 @@
                         <span class="precio">S/. {{ producto.precio }}</span>
                         
                         <button class="btn-carrito" data-id="{{ producto.id }}" 
-                                onclick="addToCartFromTemplate('{{ producto.id|escapejs }}', '{{ producto.nombre|escapejs }}', {{ producto.precio }}, '{{ producto.imagen|escapejs }}')">
+                                onclick="addToCartFromTemplate('{{ producto.id|escapejs }}', '{{ producto.nombre|escapejs }}', '{{ producto.precio }}', '{{ producto.imagen|escapejs }}')">
                             <i class="fas fa-shopping-cart"></i> Añadir
                         </button>
                     </div>
