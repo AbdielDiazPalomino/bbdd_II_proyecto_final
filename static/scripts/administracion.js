@@ -411,13 +411,11 @@ document.addEventListener('DOMContentLoaded', function () {
             productoData[key] = value;
         }
 
+
         try {
             const response = await fetch('/api/productos/crear/', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(productoData)
+                body: formData
             });
 
             if (!response.ok) {
@@ -594,7 +592,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 
                 <div class="form-group">
                     <label>Material:</label>
-                    <input type="text" name="material">
+                    <select name="material" required>
+                        <option value="">Seleccione tipo</option>
+                        ${await getMateriales()}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Color:</label>
+                    <select name="color" required>
+                        <option value="">Seleccione color</option>
+                        ${await getColores()} 
+                    </select>
                 </div>
                 
                 <div class="form-group">
@@ -810,22 +819,36 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    async function getMateriales() {
+    async function getMateriales(currentTipo) {
         try {
             const response = await fetch('/api/materiales/');
             if (!response.ok) throw new Error('Error al cargar materiales');
-            return await response.json();
+            const materiales = await response.json();
+            
+            let options = '';
+            materiales.forEach(material => {
+                const isSelected = (material.id === currentTipo || material.nombre === currentTipo) ? 'selected' : '';
+                options += `<option value="${material.id}" ${isSelected}>${material.nombre}</option>`;
+            });
+            return options;
         } catch (error) {
             console.error('Error:', error);
             return [];
         }
     }
 
-    async function getColores() {
+    async function getColores(currentTipo) {
         try {
             const response = await fetch('/api/colores/');
             if (!response.ok) throw new Error('Error al cargar colores');
-            return await response.json();
+            const colores = await response.json();
+            
+            let options = '';
+            colores.forEach(color => {
+                const isSelected = (color.id === currentTipo || color.nombre === currentTipo) ? 'selected' : '';
+                options += `<option value="${color.id}" ${isSelected}>${color.nombre}</option>`;
+            });
+            return options;
         } catch (error) {
             console.error('Error:', error);
             return [];

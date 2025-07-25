@@ -31,8 +31,8 @@ class CategoriaSerializer(serializers.ModelSerializer):
         fields = ['id', 'nombre']
 
 class ProductoSerializer(serializers.ModelSerializer):
-    tipo = serializers.StringRelatedField()
-    material = serializers.StringRelatedField()
+    #tipo = serializers.StringRelatedField()
+    #material = serializers.StringRelatedField()
     
     class Meta:
         model = Producto
@@ -65,7 +65,7 @@ class MaterialSerializer(serializers.ModelSerializer):
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Color
-        fields = ['id', 'nombre']        
+        fields = ['id', 'nombre']
 
 class ClienteSerializer(serializers.ModelSerializer):
 
