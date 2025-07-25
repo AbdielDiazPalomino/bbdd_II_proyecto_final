@@ -694,11 +694,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <label>Material:</label>
                             <select name="material">
                         <option value="">Seleccione material</option>
-                        ${materiales.map(m =>
-                `<option value="${m.id}" ${isMaterialSelected(m.id) ? 'selected' : ''}>
-                                ${m.nombre}
-                            </option>`
-            ).join('')}
+                        ${await getMateriales(producto.material?.id || producto.material)}
                     </select>
                         </div>
                         
@@ -706,11 +702,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <label>Color:</label>
                             <select name="color">
                                 <option value="">Seleccione color</option>
-                                ${colores.map(c =>
-                `<option value="${c.id}" ${(producto.color?.id === c.id || producto.color === c.id) ? 'selected' : ''}>
-                                        ${c.nombre}
-                                    </option>`
-            ).join('')}
+                                ${await getColores(producto.color?.id || producto.color)}
                             </select>
                         </div>
                         
