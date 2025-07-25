@@ -402,6 +402,49 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    async function createNewProduct(form) {
+        const formData = new FormData(form);
+
+        // Convierte FormData a objeto simple
+        const productoData = {};
+        for (let [key, value] of formData.entries()) {
+            productoData[key] = value;
+        }
+
+        try {
+            const response = await fetch('/api/productos/crear/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(productoData)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Error del servidor:', errorData);
+                alert(`Error al crear el producto: ${errorData.message || 'Error desconocido'}`);
+                return;
+            }
+
+            const result = await response.json();
+            console.log('Producto creado con éxito:', result);
+
+            alert('¡Producto creado correctamente!');
+            document.getElementById('detail-modal').style.display = 'none';
+
+            // Si tienes una función para recargar la lista de productos, la puedes llamar aquí
+            if (typeof cargarProductos === 'function') {
+                cargarProductos();
+            }
+
+        } catch (error) {
+            console.error('Error al crear el producto:', error);
+            alert('Ocurrió un error al enviar los datos');
+        }
+    }
+
+
     async function loadProductos(page = 1) {
         try {
             const response = await fetch(`/api/productos/?page=${page}`);
@@ -447,11 +490,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             <i class="fas fa-search"></i>
                             <input type="text" id="producto-search" placeholder="Buscar productos...">
                         </div>
-                        <button class="filter-btn">
-                            <i class="fas fa-filter"></i>
-                            <span>Filtrar</span>
-                        </button>
                     </div>
+                </div>
+                <div>
+                    <button class="action-btn create-btn" onclick="crearProducto()">Agregar Producto</button>
                 </div>
 
                 <table>
@@ -562,12 +604,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 
                 <div class="form-group">
                     <label>Imagen:</label>
-                    <input type="file" name="imagen" accept="image/*">
+                    <input type="text" name="imagen" placeholder="https://ejemplo.com/imagen.jpg">
                 </div>
                 
                 <div class="form-actions">
-                    <button type="button" class="cancel-btn" onclick="document.getElementById('detail-modal').style.display='none'">Cancelar</button>
-                    <button type="submit" class="save-btn">Crear Producto</button>
+                    <button type="button" class="action-btn" onclick="document.getElementById('detail-modal').style.display='none'">Cancelar</button>
+                    <button type="submit" style="background-color: var(--primary); color: white;" class="action-btn">Crear Producto</button>
                 </div>
             </form>
         </div>

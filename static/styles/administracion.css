@@ -28,6 +28,22 @@ body {
     min-height: 100vh;
 }
 
+.create-btn{
+    background: var(--primary);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+    padding: 10px 15px !important;
+    margin-bottom: 20px;
+}
+
+.create-btn:hover {
+    background: var(--accent);
+}
+
 /* Sidebar */
 .sidebar {
     background: var(--primary);
@@ -359,6 +375,10 @@ tr:hover {
     align-items: center;
     z-index: 1000;
     backdrop-filter: blur(2px);
+}
+
+.modal-contenido{
+    width: 500px;
 }
 
 /* Modal content container */
